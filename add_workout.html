@@ -5,7 +5,7 @@
     <title>Workout</title>
 </head>
 <body>
-    <form aria-label="sets" id="sets">
+    <form id="sets" action="/add" method="POST" aria-label="sets" >
 
     </form>
 
@@ -18,10 +18,8 @@
 
         const submitButton = document.createElement("button")
         submitButton.type = "submit"
-        submitButton.formMethod = "POST"
         submitButton.id = "submit_btn"
         submitButton.innerText = "Submit"
-        submitButton.form = form
 
         const addButton = document.getElementById("add_btn")
         addButton.addEventListener("click", () => {
@@ -78,11 +76,13 @@
         height: 50px;
         font-size: xx-large;
         margin-top: 10px;
+        cursor: pointer;
     }
 
     #submit_btn {
         order: 0;
         font-size: xx-large;
+        cursor: pointer;
     }
 
     #sets {

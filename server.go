@@ -7,21 +7,14 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", hello)
+	http.HandleFunc("/", home)
 	http.HandleFunc("/add", addWorkout)
 
 	log.Panic(http.ListenAndServe(":5000", nil))
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
+func home(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
-	if r.Method == http.MethodPost {
-		if err := r.ParseForm(); err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Println(r.FormValue("name"))
-	}
 
 	http.ServeFile(w, r, "home.html")
 }
@@ -37,6 +30,9 @@ func addWorkout(w http.ResponseWriter, r *http.Request) {
 		for key, value := range r.PostForm {
 			fmt.Printf("%s: %s\n", key, value)
 		}
+
+		http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
+		return
 	}
 
 	http.ServeFile(w, r, "add_workout.html")
