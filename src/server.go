@@ -16,7 +16,7 @@ func main() {
 func home(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
 
-	http.ServeFile(w, r, "home.html")
+	http.ServeFile(w, r, "src/resources/home.html")
 }
 
 func addWorkout(w http.ResponseWriter, r *http.Request) {
@@ -35,5 +35,5 @@ func addWorkout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.ServeFile(w, r, "add_workout.html")
+	http.ServeFile(w, r, "src/resources/add_workout.html")
 }
