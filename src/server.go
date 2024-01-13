@@ -1,13 +1,26 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"github.com/Furrj/Workouts/src/internal/DB"
 	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
+	url := os.Getenv("URL")
+	fmt.Println(url)
+	db := DB.InitDB(url)
+
+	err := db.Conn.Ping(context.Background())
+	if err != nil {
+		log.Panicf("Error pinging db: %+v\n", err)
+	} else {
+		fmt.Printf("DB connection opened")
+	}
+
 	http.HandleFunc("/", home)
 	http.HandleFunc("/add", addWorkout)
 
