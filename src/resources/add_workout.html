@@ -5,7 +5,7 @@
     <title>Workout</title>
   </head>
   <body>
-    <form id="sets" action="/add" method="POST" aria-label="sets"></form>
+    <form action="/add" aria-label="sets" id="sets" method="POST"></form>
 
     <button id="add_btn">+</button>
 
@@ -61,11 +61,14 @@
 <style>
   * {
     box-sizing: border-box;
+    color: white;
   }
 
   body {
     width: 100vw;
     height: 100vh;
+    background: black;
+
 
     display: flex;
     flex-direction: column;
@@ -98,7 +101,7 @@
   }
 
   .set_root {
-    width: 100%;
+    width: 70%;
     height: 100px;
 
     border: 1px solid black;
@@ -120,6 +123,7 @@
   }
 
   .set_input {
+    width: 100%;
     font-size: xx-large;
     border: none;
     border-top-right-radius: inherit;
