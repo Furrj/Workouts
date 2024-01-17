@@ -13,6 +13,16 @@
       let setCount = 0;
 
       const form = document.getElementById("sets");
+      form.onsubmit = (ev) => {
+        for (let i = 1; i <= setCount; i++) {
+          const el = document.getElementById(`set_${i}_input`);
+          console.log(el.value);
+          el.value = "c";
+        }
+
+        ev.preventDefault();
+        form.submit();
+      };
 
       const submitButton = document.createElement("button");
       submitButton.type = "submit";
@@ -30,19 +40,23 @@
       function addSet(id) {
         setCount++;
 
+        // Root div
         const set = document.createElement("div");
         set.id = `set_${setCount}`;
         set.classList.add("set_root");
 
+        // ID div (left)
         const id_cont = document.createElement("div");
         id_cont.classList.add("id_cont");
         id_cont.innerText = setCount.toString();
 
+        // Set input
         const set_input = document.createElement("input");
         set_input.classList.add("set_input");
         set_input.type = "text";
         set_input.ariaLabel = `set_${setCount}_input`;
-        set_input.name = `set_${setCount}`;
+        set_input.name = `set_${setCount}_input`;
+        set_input.id = `set_${setCount}_input`;
         set_input.onkeydown = (ev) => {
           if (ev.key === "Enter") {
             ev.preventDefault();
