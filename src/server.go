@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/Furrj/Workouts/src/internal/types"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
@@ -28,8 +30,23 @@ func addWorkout(w http.ResponseWriter, r *http.Request) {
 			log.Panicf("Error: %+v\n", err)
 		}
 
+		newWorkout := types.Workout{
+			WorkoutID: 0,
+			Timestamp: uint64(time.Now().Unix()),
+		}
+
+		var setCount uint8 = 1
 		for key, value := range r.PostForm {
-			fmt.Printf("%s: %s\n", key, value)
+			fmt.Printf("%s: %s\n", key, value[0])
+
+			newSet := types.ReqSet{
+				SetID: setCount,
+				Text:  value[0],
+			}
+			setCount++
+
+			fmt.Printf("WorkoutID: %+v\n", newWorkout)
+			fmt.Printf("Set: %+v\n", newSet)
 		}
 
 		http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
