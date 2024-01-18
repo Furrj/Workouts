@@ -7,21 +7,28 @@
   <body>
     <form action="/add" aria-label="sets" id="sets" method="POST"></form>
 
-    <button id="add_btn">+</button>
+    <button id="add_set_btn">Add Set</button>
 
     <script>
       let setCount = 0;
+      const setMap = new Map();
+      class Set {
+        id;
+        root;
+        reps;
 
+        constructor(id, root) {
+          this.id = id;
+          this.root = root;
+          this.reps = [];
+        }
+      }
+
+      // Form
       const form = document.getElementById("sets");
       form.onsubmit = (ev) => {
-        for (let i = 1; i <= setCount; i++) {
-          const el = document.getElementById(`set_${i}_input`);
-          console.log(el.value);
-          el.value = "c";
-        }
-
         ev.preventDefault();
-        form.submit();
+        //form.submit();
       };
 
       const submitButton = document.createElement("button");
@@ -29,13 +36,58 @@
       submitButton.id = "submit_btn";
       submitButton.innerText = "Submit";
 
-      const addButton = document.getElementById("add_btn");
-      addButton.addEventListener("click", () => {
+      const addSetButton = document.getElementById("add_set_btn");
+      addSetButton.addEventListener("click", () => {
         if (setCount === 0) {
           form.appendChild(submitButton);
         }
-        addSet();
+
+        // TEST
+        addSet_TEST();
       });
+
+      function addSet_TEST() {
+        setCount++;
+
+        const set = document.createElement("div");
+        set.id = `set_${setCount}`;
+        set.classList.add("set_root");
+
+        const name_input = document.createElement("input");
+        name_input.type = "text";
+        name_input.classList.add("set_name");
+        name_input.id = `set_${setCount}_name`;
+
+        form.appendChild(set);
+        set.appendChild(name_input);
+
+        const newSet = new Set(setCount, set);
+        setMap.set(`set_${setCount}`, newSet);
+        console.log(setMap.get(`set_${setCount}`));
+
+        addRepCont(setCount, 1);
+      }
+
+      function addRepCont(parentID, repID) {
+        const rep_cont = document.createElement("div");
+        rep_cont.classList.add("rep_cont");
+        rep_cont.id = `set_${parentID}_rep_${repID}`;
+
+        const parent = document.getElementById(`set_${parentID}`);
+        parent.appendChild(rep_cont);
+
+        const button = document.createElement("button");
+        button.classList.add("add_rep_btn");
+        button.innerText = "Add Rep";
+        button.onclick = (ev) => {
+          rep_cont.removeChild(button);
+          rep_cont.innerText = "INPUT";
+          addRepCont(parentID, repID + 1);
+          console.log("TEST");
+        };
+
+        rep_cont.appendChild(button);
+      }
 
       function addSet(id) {
         setCount++;
@@ -75,7 +127,15 @@
 <style>
   * {
     box-sizing: border-box;
-    color: white;
+    color: black;
+  }
+
+  input {
+    color: black;
+  }
+
+  button {
+    cursor: pointer;
   }
 
   body {
@@ -89,13 +149,14 @@
     justify-content: center;
   }
 
-  #add_btn {
-    width: 100px;
+  #add_set_btn {
+    width: fit-content;
     height: 50px;
+
     font-size: xx-large;
-    margin-top: 10px;
-    cursor: pointer;
     color: black;
+
+    margin-top: 10px;
   }
 
   #submit_btn {
@@ -117,14 +178,44 @@
 
   .set_root {
     width: 70%;
-    height: 100px;
+    min-height: 50px;
+
+    background: white;
 
     border: 1px solid black;
     border-radius: 1rem;
     margin-top: 10px;
 
-    display: grid;
-    grid-template-columns: 1fr 6fr;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .set_name {
+    width: 50%;
+
+    text-align: center;
+    font-size: large;
+
+    margin: 0.5rem;
+
+    order: -1;
+  }
+
+  .add_rep_btn {
+    font-size: x-large;
+  }
+
+  .rep_cont {
+    height: 75px;
+    width: 100%;
+
+    border-top: 1px solid black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .id_cont {
