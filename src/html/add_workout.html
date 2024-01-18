@@ -5,7 +5,7 @@
     <title>Workout</title>
   </head>
   <body>
-    <form action="/add" aria-label="sets" id="sets" method="POST"></form>
+    <div aria-label="workout_input" id="sets"></div>
 
     <button id="add_set_btn">Add Set</button>
 
@@ -15,15 +15,37 @@
 
       // Form
       const form = document.getElementById("sets");
-      form.onsubmit = (ev) => {
-        ev.preventDefault();
-        //form.submit();
-      };
 
       const submitButton = document.createElement("button");
       submitButton.type = "submit";
       submitButton.id = "submit_btn";
       submitButton.innerText = "Submit";
+      submitButton.onclick = (ev) => {
+        for (let i = 1; i <= repCounts.length; i++) {
+          const name = document.getElementById(`set_${i}_name`).value;
+          const set = {
+            name,
+            reps: [],
+          };
+
+          for (let j = 1; j <= repCounts[i - 1]; j++) {
+            const count = document.getElementById(
+              `set_${i}_rep_${j}_count`,
+            ).value;
+            const weight = document.getElementById(
+              `set_${i}_rep_${j}_weight`,
+            ).value;
+
+            const rep = {
+              count,
+              weight,
+            };
+            set.reps.push(rep);
+          }
+
+          console.log(set);
+        }
+      };
 
       const addSetButton = document.getElementById("add_set_btn");
       addSetButton.addEventListener("click", () => {
@@ -102,38 +124,6 @@
         root.appendChild(weight_input);
         parent.appendChild(root);
       }
-
-      function addSet(id) {
-        setCount++;
-
-        // Root div
-        const set = document.createElement("div");
-        set.id = `set_${setCount}`;
-        set.classList.add("set_root");
-
-        // ID div (left)
-        const id_cont = document.createElement("div");
-        id_cont.classList.add("id_cont");
-        id_cont.innerText = setCount.toString();
-
-        // Set input
-        const set_input = document.createElement("input");
-        set_input.classList.add("set_input");
-        set_input.type = "text";
-        set_input.ariaLabel = `set_${setCount}_input`;
-        set_input.name = `set_${setCount}_input`;
-        set_input.id = `set_${setCount}_input`;
-        set_input.onkeydown = (ev) => {
-          if (ev.key === "Enter") {
-            ev.preventDefault();
-          }
-        };
-
-        console.log(`setCount: ${setCount}`);
-        set.appendChild(id_cont);
-        set.appendChild(set_input);
-        form.appendChild(set);
-      }
     </script>
   </body>
 </html>
@@ -155,8 +145,8 @@
   }
 
   body {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: black;
 
     display: flex;
@@ -184,7 +174,10 @@
 
   #sets {
     width: 80%;
-    height: auto;
+    height: fit-content;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 
     display: flex;
     flex-direction: column;
@@ -208,7 +201,7 @@
     justify-content: center;
   }
 
-  .set_name {
+  .set_root > .set_name {
     width: 50%;
 
     text-align: center;
@@ -217,10 +210,6 @@
     margin: 0.5rem;
 
     order: -1;
-  }
-
-  .add_rep_btn {
-    font-size: x-large;
   }
 
   .rep_cont {
@@ -235,7 +224,11 @@
     justify-content: center;
   }
 
-  .rep_input_cont {
+  .rep_cont > .add_rep_btn {
+    font-size: x-large;
+  }
+
+  .rep_cont > .rep_input_cont {
     width: 100%;
     height: 100%;
 
@@ -254,18 +247,11 @@
     justify-content: center;
   }
 
-  .id_cont {
+  .rep_input_cont > .id_cont {
     border-right: 1px solid black;
+    font-size: xx-large;
+    font-weight: bolder;
 
     background: grey;
-  }
-
-  .set_input {
-    width: 100%;
-    font-size: xx-large;
-    border: none;
-    border-top-right-radius: inherit;
-    border-bottom-right-radius: inherit;
-    color: black;
   }
 </style>
