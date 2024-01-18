@@ -1,6 +1,11 @@
 package types
 
 type ReqSet struct {
-	SetID uint8  `json:"set_id"`
-	Text  string `json:"text"`
+	Name string   `json:"name"`
+	Reps []ReqRep `json:"reps"`
+}
+
+type ReqRep struct {
+	Count  uint8  `json:"count,string"`
+	Weight uint16 `json:"weight,string"`
 }
