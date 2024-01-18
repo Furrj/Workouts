@@ -11,18 +11,7 @@
 
     <script>
       let setCount = 0;
-      const setMap = new Map();
-      class Set {
-        id;
-        root;
-        reps;
-
-        constructor(id, root) {
-          this.id = id;
-          this.root = root;
-          this.reps = [];
-        }
-      }
+      const repCounts = [];
 
       // Form
       const form = document.getElementById("sets");
@@ -61,19 +50,16 @@
         form.appendChild(set);
         set.appendChild(name_input);
 
-        const newSet = new Set(setCount, set);
-        setMap.set(`set_${setCount}`, newSet);
-        console.log(setMap.get(`set_${setCount}`));
-
+        repCounts.push(0);
         addRepCont(setCount, 1);
       }
 
-      function addRepCont(parentID, repID) {
+      function addRepCont(setID, repID) {
         const rep_cont = document.createElement("div");
         rep_cont.classList.add("rep_cont");
-        rep_cont.id = `set_${parentID}_rep_${repID}`;
+        rep_cont.id = `set_${setID}_rep_${repID}`;
 
-        const parent = document.getElementById(`set_${parentID}`);
+        const parent = document.getElementById(`set_${setID}`);
         parent.appendChild(rep_cont);
 
         const button = document.createElement("button");
@@ -81,12 +67,40 @@
         button.innerText = "Add Rep";
         button.onclick = (ev) => {
           rep_cont.removeChild(button);
-          rep_cont.innerText = "INPUT";
-          addRepCont(parentID, repID + 1);
-          console.log("TEST");
+          addRepInputs(rep_cont, setID, repID);
+          repCounts[setID - 1]++;
+          addRepCont(setID, repID + 1);
         };
 
         rep_cont.appendChild(button);
+      }
+
+      function addRepInputs(parent, setID, repID) {
+        const root = document.createElement("div");
+        root.classList.add("rep_input_cont");
+
+        const id_cont = document.createElement("div");
+        id_cont.classList.add("id_cont");
+        id_cont.innerText = repID.toString();
+
+        const count_input = document.createElement("input");
+        count_input.type = "number";
+        count_input.placeholder = "Reps";
+        count_input.id = `set_${setID}_rep_${repID}_count`;
+
+        const x = document.createElement("div");
+        x.innerText = "X";
+
+        const weight_input = document.createElement("input");
+        weight_input.type = "number";
+        weight_input.placeholder = "Weight";
+        weight_input.id = `set_${setID}_rep_${repID}_weight`;
+
+        root.appendChild(id_cont);
+        root.appendChild(count_input);
+        root.appendChild(x);
+        root.appendChild(weight_input);
+        parent.appendChild(root);
       }
 
       function addSet(id) {
@@ -131,7 +145,9 @@
   }
 
   input {
+    text-align: center;
     color: black;
+    font-size: x-large;
   }
 
   button {
@@ -214,20 +230,33 @@
     border-top: 1px solid black;
 
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rep_input_cont {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr 3fr;
+  }
+
+  .rep_input_cont > input {
+    width: 100%;
+  }
+
+  .rep_input_cont > div {
+    display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
   }
 
   .id_cont {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
     border-right: 1px solid black;
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-    font-size: xx-large;
+
     background: grey;
   }
 
