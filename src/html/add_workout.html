@@ -5,54 +5,123 @@
     <title>Workout</title>
   </head>
   <body>
-    <form action="/add" aria-label="sets" id="sets" method="POST"></form>
+    <div aria-label="workout_input" id="sets"></div>
 
-    <button id="add_btn">+</button>
+    <button id="add_set_btn">Add Set</button>
 
     <script>
       let setCount = 0;
+      const repCounts = [];
 
+      // Form
       const form = document.getElementById("sets");
 
       const submitButton = document.createElement("button");
       submitButton.type = "submit";
       submitButton.id = "submit_btn";
       submitButton.innerText = "Submit";
+      submitButton.onclick = (ev) => {
+        for (let i = 1; i <= repCounts.length; i++) {
+          const name = document.getElementById(`set_${i}_name`).value;
+          const set = {
+            name,
+            reps: [],
+          };
 
-      const addButton = document.getElementById("add_btn");
-      addButton.addEventListener("click", () => {
+          for (let j = 1; j <= repCounts[i - 1]; j++) {
+            const count = document.getElementById(
+              `set_${i}_rep_${j}_count`,
+            ).value;
+            const weight = document.getElementById(
+              `set_${i}_rep_${j}_weight`,
+            ).value;
+
+            const rep = {
+              count,
+              weight,
+            };
+            set.reps.push(rep);
+          }
+
+          console.log(set);
+        }
+      };
+
+      const addSetButton = document.getElementById("add_set_btn");
+      addSetButton.addEventListener("click", () => {
         if (setCount === 0) {
           form.appendChild(submitButton);
         }
+
         addSet();
       });
 
-      function addSet(id) {
+      function addSet() {
         setCount++;
 
         const set = document.createElement("div");
         set.id = `set_${setCount}`;
         set.classList.add("set_root");
 
-        const id_cont = document.createElement("div");
-        id_cont.classList.add("id_cont");
-        id_cont.innerText = setCount.toString();
+        const name_input = document.createElement("input");
+        name_input.type = "text";
+        name_input.classList.add("set_name");
+        name_input.id = `set_${setCount}_name`;
 
-        const set_input = document.createElement("input");
-        set_input.classList.add("set_input");
-        set_input.type = "text";
-        set_input.ariaLabel = `set_${setCount}_input`;
-        set_input.name = `set_${setCount}`;
-        set_input.onkeydown = (ev) => {
-          if (ev.key === "Enter") {
-            ev.preventDefault();
-          }
+        form.appendChild(set);
+        set.appendChild(name_input);
+
+        repCounts.push(0);
+        addRepCont(setCount, 1);
+      }
+
+      function addRepCont(setID, repID) {
+        const rep_cont = document.createElement("div");
+        rep_cont.classList.add("rep_cont");
+        rep_cont.id = `set_${setID}_rep_${repID}`;
+
+        const parent = document.getElementById(`set_${setID}`);
+        parent.appendChild(rep_cont);
+
+        const button = document.createElement("button");
+        button.classList.add("add_rep_btn");
+        button.innerText = "Add Rep";
+        button.onclick = (ev) => {
+          rep_cont.removeChild(button);
+          addRepInputs(rep_cont, setID, repID);
+          repCounts[setID - 1]++;
+          addRepCont(setID, repID + 1);
         };
 
-        console.log(`setCount: ${setCount}`);
-        set.appendChild(id_cont);
-        set.appendChild(set_input);
-        form.appendChild(set);
+        rep_cont.appendChild(button);
+      }
+
+      function addRepInputs(parent, setID, repID) {
+        const root = document.createElement("div");
+        root.classList.add("rep_input_cont");
+
+        const id_cont = document.createElement("div");
+        id_cont.classList.add("id_cont");
+        id_cont.innerText = repID.toString();
+
+        const count_input = document.createElement("input");
+        count_input.type = "number";
+        count_input.placeholder = "Reps";
+        count_input.id = `set_${setID}_rep_${repID}_count`;
+
+        const x = document.createElement("div");
+        x.innerText = "X";
+
+        const weight_input = document.createElement("input");
+        weight_input.type = "number";
+        weight_input.placeholder = "Weight";
+        weight_input.id = `set_${setID}_rep_${repID}_weight`;
+
+        root.appendChild(id_cont);
+        root.appendChild(count_input);
+        root.appendChild(x);
+        root.appendChild(weight_input);
+        parent.appendChild(root);
       }
     </script>
   </body>
@@ -61,13 +130,29 @@
 <style>
   * {
     box-sizing: border-box;
-    color: white;
+    color: black;
+    margin: 0;
+  }
+
+  input {
+    text-align: center;
+    color: black;
+    font-size: x-large;
+  }
+
+  button {
+    cursor: pointer;
   }
 
   body {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+
+    padding: 1em;
     background: black;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 
     display: flex;
     flex-direction: column;
@@ -75,13 +160,14 @@
     justify-content: center;
   }
 
-  #add_btn {
-    width: 100px;
+  #add_set_btn {
+    width: fit-content;
     height: 50px;
+
     font-size: xx-large;
-    margin-top: 10px;
-    cursor: pointer;
     color: black;
+
+    margin-top: 10px;
   }
 
   #submit_btn {
@@ -93,7 +179,10 @@
 
   #sets {
     width: 80%;
-    height: auto;
+    min-height: auto;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 
     display: flex;
     flex-direction: column;
@@ -103,35 +192,71 @@
 
   .set_root {
     width: 70%;
-    height: 100px;
+    min-height: 50px;
+
+    background: white;
 
     border: 1px solid black;
     border-radius: 1rem;
     margin-top: 10px;
 
-    display: grid;
-    grid-template-columns: 1fr 6fr;
-  }
-
-  .id_cont {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    border-right: 1px solid black;
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-    font-size: xx-large;
-    background: grey;
   }
 
-  .set_input {
+  .set_root > .set_name {
+    width: 50%;
+
+    text-align: center;
+    font-size: large;
+
+    margin: 0.5rem;
+
+    order: -1;
+  }
+
+  .rep_cont {
+    height: 75px;
     width: 100%;
+
+    border-top: 1px solid black;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rep_cont > .add_rep_btn {
+    font-size: x-large;
+  }
+
+  .rep_cont > .rep_input_cont {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr 3fr;
+  }
+
+  .rep_input_cont > input {
+    width: 100%;
+  }
+
+  .rep_input_cont > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rep_input_cont > .id_cont {
+    border-right: 1px solid black;
     font-size: xx-large;
-    border: none;
-    border-top-right-radius: inherit;
-    border-bottom-right-radius: inherit;
-    color: black;
+    font-weight: bolder;
+
+    background: grey;
   }
 </style>
