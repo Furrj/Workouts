@@ -10,6 +10,7 @@
     <button id="add_set_btn">Add Set</button>
 
     <script>
+      const POST_ROUTE = "/api/post";
       let setCount = 0;
       const repCounts = [];
 
@@ -21,6 +22,8 @@
       submitButton.id = "submit_btn";
       submitButton.innerText = "Submit";
       submitButton.onclick = (ev) => {
+        const workout = [];
+
         for (let i = 1; i <= repCounts.length; i++) {
           const name = document.getElementById(`set_${i}_name`).value;
           const set = {
@@ -43,8 +46,10 @@
             set.reps.push(rep);
           }
 
-          console.log(set);
+          workout.push(set);
         }
+
+        postWorkout(workout);
       };
 
       const addSetButton = document.getElementById("add_set_btn");
@@ -122,6 +127,20 @@
         root.appendChild(x);
         root.appendChild(weight_input);
         parent.appendChild(root);
+      }
+
+      async function postWorkout(workout) {
+        const raw = await fetch(POST_ROUTE, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(workout),
+        });
+
+        const res = await raw.json();
+
+        console.log(`Response: ${res.status}`);
       }
     </script>
   </body>
