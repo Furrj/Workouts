@@ -28,8 +28,11 @@
           const name = document.getElementById(`set_${i}_name`).value;
           const set = {
             name,
-            reps: [],
+            set_id: i,
+            timestamp: Math.floor(new Date().getTime() / 1000),
           };
+          const counts = [];
+          const weights = [];
 
           for (let j = 1; j <= repCounts[i - 1]; j++) {
             const count = document.getElementById(
@@ -39,16 +42,17 @@
               `set_${i}_rep_${j}_weight`,
             ).value;
 
-            const rep = {
-              count,
-              weight,
-            };
-            set.reps.push(rep);
+            counts.push(count);
+            weights.push(weight);
           }
 
+          set.weights = weights.join("/");
+          set.reps = counts.join("/");
+          set.text = `${set.name} ${set.reps} ${set.weights}`;
           workout.push(set);
         }
 
+        console.log(workout);
         postWorkout(workout);
       };
 
