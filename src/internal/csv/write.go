@@ -21,7 +21,8 @@ func Write(sets []types.ReqSet) error {
 		workout = append(workout, data)
 	}
 
-	file, err := os.OpenFile("data.csv", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	dataCSVURL := os.Getenv("DATA_CSV_URL")
+	file, err := os.OpenFile(dataCSVURL, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Panicf("Error opening csv file writer: %+v\n", err)
 	}
