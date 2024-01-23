@@ -1,22 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"github.com/Furrj/Workouts/src/internal/routeHandler"
+	"github.com/Furrj/Workouts/src/internal/utils"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
-	HtmlDir := os.Getenv("HTML_DIR")
-	DataDir := os.Getenv("DATA_DIR")
-	LogsDir := os.Getenv("LOGS_DIR")
-	if HtmlDir == "" || DataDir == "" || LogsDir == "" {
-		fmt.Println("Could not find env vars")
-		os.Exit(1)
-	}
-	rh := routeHandler.NewRouteHandler(HtmlDir, DataDir, LogsDir)
+	rh := routeHandler.NewRouteHandler(utils.InitEnvVars())
 
 	http.HandleFunc("/", rh.Home)
 	http.HandleFunc("/add", rh.AddWorkout)

@@ -1,4 +1,4 @@
-package csv
+package dataHandler
 
 import (
 	"encoding/csv"
@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func Write(dataCSVURL string, sets []types.ReqSet) error {
+func WriteSetsCSV(setsCSVURL string, sets []types.ReqSet) error {
 	var workout [][]string
 	fmt.Printf("ReqSets: %+v\n", sets)
 	// TODO: workoutID
@@ -21,14 +21,14 @@ func Write(dataCSVURL string, sets []types.ReqSet) error {
 		workout = append(workout, data)
 	}
 
-	file, err := os.OpenFile(dataCSVURL, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	file, err := os.OpenFile(setsCSVURL, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
-		log.Panicf("Error opening csv file writer: %+v\n", err)
+		log.Panicf("Error opening dataHandler file writer: %+v\n", err)
 	}
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			log.Panicf("Error closing csv file writer: %+v\n", err)
+			log.Panicf("Error closing dataHandler file writer: %+v\n", err)
 		}
 	}(file)
 
@@ -38,7 +38,7 @@ func Write(dataCSVURL string, sets []types.ReqSet) error {
 	for _, r := range workout {
 		err = w.Write(r)
 		if err != nil {
-			log.Panicf("Error writing csv file row: %+v\n", err)
+			log.Panicf("Error writing dataHandler file row: %+v\n", err)
 		}
 	}
 
