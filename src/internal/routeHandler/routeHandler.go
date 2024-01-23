@@ -37,6 +37,14 @@ func (rh RouteHandler) PostWorkout(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("POST /api/post")
 	var sets []types.ReqSet
 
+	meta, err := dataHandler.ReadMeta(rh.EnvVars.MetaCsvUrl)
+	if err != nil {
+		fmt.Printf("Error retrieving metadata: %+v\n", err)
+		sendErr(w)
+		return
+	}
+	meta.WorkoutCount++
+
 	reqBytes, err := io.ReadAll(r.Body)
 	if err != nil {
 		fmt.Printf("Error reading request: %+v\n", err)
@@ -50,8 +58,13 @@ func (rh RouteHandler) PostWorkout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := dataHandler.WriteSetsCSV(rh.EnvVars.SetsCsvUrl, sets); err != nil {
-		fmt.Printf("Error writing dataHandler: %+v\n", err)
+	if err := dataHandler.WriteSetsCSV(rh.EnvVars.SetsCsvUrl, meta, sets); err != nil {
+		fmt.Printf("Error writing to %s: %+v\n", rh.EnvVars.SetsCsvUrl, err)
+		sendErr(w)
+		return
+	}
+	if err := dataHandler.WriteMetaCSV(rh.EnvVars.MetaCsvUrl, meta); err != nil {
+		fmt.Printf("Error writing to %s: %+v\n", rh.EnvVars.MetaCsvUrl, err)
 		sendErr(w)
 		return
 	}

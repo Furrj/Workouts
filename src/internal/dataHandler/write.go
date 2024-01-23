@@ -9,14 +9,11 @@ import (
 	"strconv"
 )
 
-func WriteSetsCSV(setsCSVURL string, sets []types.ReqSet) error {
+func WriteSetsCSV(setsCSVURL string, meta types.MetaData, sets []types.ReqSet) error {
 	var workout [][]string
-	fmt.Printf("ReqSets: %+v\n", sets)
-	// TODO: workoutID
-	var workoutID uint64 = 1
 
 	for _, s := range sets {
-		data := []string{strconv.FormatUint(workoutID, 10), strconv.FormatUint(uint64(s.SetID), 10), strconv.FormatUint(s.Timestamp, 10), s.Name, s.Text, s.Reps, s.Weights}
+		data := []string{strconv.FormatUint(meta.WorkoutCount, 10), strconv.FormatUint(uint64(s.SetID), 10), strconv.FormatUint(s.Timestamp, 10), s.Name, s.Text, s.Reps, s.Weights}
 
 		workout = append(workout, data)
 	}
@@ -42,5 +39,24 @@ func WriteSetsCSV(setsCSVURL string, sets []types.ReqSet) error {
 		}
 	}
 
+	fmt.Printf("Wrote sets: %+v\n", sets)
+	return nil
+}
+
+func WriteMetaCSV(metaCsvUrl string, data types.MetaData) error {
+	file, err := os.Create(metaCsvUrl)
+	if err != nil {
+		return err
+	}
+
+	if _, err := file.WriteString(data.ToString()); err != nil {
+		return err
+	}
+
+	if err := file.Close(); err != nil {
+		return err
+	}
+
+	fmt.Printf("Wrote meta: %+v\n", data)
 	return nil
 }
