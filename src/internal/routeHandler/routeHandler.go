@@ -24,13 +24,13 @@ func NewRouteHandler(e types.EnvVars) RouteHandler {
 func (rh RouteHandler) Home(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
 
-	http.ServeFile(w, r, fmt.Sprintf("%s/home.html", rh.EnvVars.HtmlDir))
+	http.ServeFile(w, r, rh.EnvVars.HomeHtmlUrl)
 }
 
 func (rh RouteHandler) AddWorkout(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
 
-	http.ServeFile(w, r, fmt.Sprintf("%s/add_workout.html", rh.EnvVars.HtmlDir))
+	http.ServeFile(w, r, rh.EnvVars.AddWorkoutHtmlUrl)
 }
 
 func (rh RouteHandler) PostWorkout(w http.ResponseWriter, r *http.Request) {

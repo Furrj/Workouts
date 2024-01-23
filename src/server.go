@@ -1,22 +1,14 @@
 package main
 
 import (
-	"fmt"
 	"github.com/Furrj/Workouts/src/internal/routeHandler"
+	"github.com/Furrj/Workouts/src/internal/utils"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
-	HtmlDir := os.Getenv("HTML_DIR")
-	SetsCSVURL := os.Getenv("SETS_CSV_URL")
-	MetaCSVURL := os.Getenv("META_CSV_URL")
-	if HtmlDir == "" || SetsCSVURL == "" || MetaCSVURL == "" {
-		fmt.Println("Could not find env vars")
-		os.Exit(1)
-	}
-	rh := routeHandler.NewRouteHandler(HtmlDir)
+	rh := routeHandler.NewRouteHandler(utils.InitEnvVars())
 
 	http.HandleFunc("/", rh.Home)
 	http.HandleFunc("/add", rh.AddWorkout)

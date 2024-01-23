@@ -9,8 +9,7 @@ import (
 	"strconv"
 )
 
-func WriteSetsCSV(dataDir string, sets []types.ReqSet) error {
-	setsCSVURL := fmt.Sprintf("%s/sets.csv", dataDir)
+func WriteSetsCSV(setsCSVURL string, sets []types.ReqSet) error {
 	var workout [][]string
 	fmt.Printf("ReqSets: %+v\n", sets)
 	// TODO: workoutID
