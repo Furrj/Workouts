@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func Write(sets []types.ReqSet) error {
+func Write(dataCSVURL string, sets []types.ReqSet) error {
 	var workout [][]string
 	fmt.Printf("ReqSets: %+v\n", sets)
 	// TODO: workoutID
@@ -21,7 +21,6 @@ func Write(sets []types.ReqSet) error {
 		workout = append(workout, data)
 	}
 
-	dataCSVURL := os.Getenv("DATA_CSV_URL")
 	file, err := os.OpenFile(dataCSVURL, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		log.Panicf("Error opening csv file writer: %+v\n", err)
