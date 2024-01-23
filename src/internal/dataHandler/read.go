@@ -1,1 +1,5 @@
 package dataHandler
+
+func ReadMeta() {
+
+}

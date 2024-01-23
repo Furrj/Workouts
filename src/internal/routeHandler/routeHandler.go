@@ -3,23 +3,19 @@ package routeHandler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Furrj/Workouts/src/internal/csv"
+	"github.com/Furrj/Workouts/src/internal/dataHandler"
 	"github.com/Furrj/Workouts/src/internal/types"
 	"io"
 	"net/http"
 )
 
 type RouteHandler struct {
-	HtmlDir string
-	DataDir string
-	LogsDir string
+	EnvVars types.EnvVars
 }
 
-func NewRouteHandler(HtmlDir string, DataDir string, LogsDir string) RouteHandler {
+func NewRouteHandler(e types.EnvVars) RouteHandler {
 	rh := RouteHandler{
-		HtmlDir: HtmlDir,
-		DataDir: DataDir,
-		LogsDir: LogsDir,
+		EnvVars: e,
 	}
 
 	return rh
@@ -28,13 +24,13 @@ func NewRouteHandler(HtmlDir string, DataDir string, LogsDir string) RouteHandle
 func (rh RouteHandler) Home(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
 
-	http.ServeFile(w, r, fmt.Sprintf("%s/home.html", rh.HtmlDir))
+	http.ServeFile(w, r, fmt.Sprintf("%s/home.html", rh.EnvVars.HtmlDir))
 }
 
 func (rh RouteHandler) AddWorkout(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
 
-	http.ServeFile(w, r, fmt.Sprintf("%s/add_workout.html", rh.HtmlDir))
+	http.ServeFile(w, r, fmt.Sprintf("%s/add_workout.html", rh.EnvVars.HtmlDir))
 }
 
 func (rh RouteHandler) PostWorkout(w http.ResponseWriter, r *http.Request) {
@@ -54,8 +50,8 @@ func (rh RouteHandler) PostWorkout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := csv.Write(fmt.Sprintf("%s/data.csv", rh.DataDir), sets); err != nil {
-		fmt.Printf("Error writing csv: %+v\n", err)
+	if err := dataHandler.WriteSetsCSV(rh.EnvVars.SetsCsvUrl, sets); err != nil {
+		fmt.Printf("Error writing dataHandler: %+v\n", err)
 		sendErr(w)
 		return
 	}
