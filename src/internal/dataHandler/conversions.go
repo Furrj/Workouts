@@ -1,7 +1,6 @@
 package dataHandler
 
 import (
-	"fmt"
 	"github.com/Furrj/Workouts/src/internal/types"
 	"strconv"
 )
@@ -18,7 +17,6 @@ func ConvertToSets(records [][]string) ([]types.Set, error) {
 		if err != nil {
 			return sets, err
 		}
-		fmt.Printf("%+v\n", set)
 		sets = append(sets, set)
 	}
 
@@ -54,23 +52,35 @@ func convertToSet(record []string) (types.Set, error) {
 	return set, nil
 }
 
-func ConvertToWorkouts(sets []types.Set) []types.Workout {
-	var workouts []types.Workout
+func ConvertToResWorkouts(sets []types.Set) []types.ResWorkout {
+	var workouts []types.ResWorkout
 
 	for _, s := range sets {
 		if len(workouts) < int(s.WorkoutID) {
-			workout := types.Workout{
+			workout := types.ResWorkout{
 				WorkoutID: s.WorkoutID,
 				Timestamp: s.Timestamp,
-				Sets: []types.Set{
-					s,
+				Sets: []types.ResSet{
+					{
+						SetID:   s.SetID,
+						Text:    s.Text,
+						Name:    s.Name,
+						Reps:    s.Reps,
+						Weights: s.Weights,
+					},
 				},
 			}
 			workouts = append(workouts, workout)
 			continue
 		}
 
-		workouts[s.WorkoutID-1].Sets = append(workouts[s.WorkoutID-1].Sets, s)
+		workouts[s.WorkoutID-1].Sets = append(workouts[s.WorkoutID-1].Sets, types.ResSet{
+			SetID:   s.SetID,
+			Text:    s.Text,
+			Name:    s.Name,
+			Reps:    s.Reps,
+			Weights: s.Weights,
+		})
 	}
 
 	return workouts

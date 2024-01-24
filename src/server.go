@@ -22,9 +22,10 @@ func main() {
 	if err != nil {
 		fmt.Printf("Error converting to sets: %+v\n", err)
 	}
-	workouts := dataHandler.ConvertToWorkouts(sets)
-	fmt.Println("Workouts:")
-	fmt.Printf("%+v\n", workouts)
+	workouts := dataHandler.ConvertToResWorkouts(sets)
+	for _, w := range workouts {
+		fmt.Printf("%+v\n", w)
+	}
 
 	http.HandleFunc("/", rh.Home)
 	http.HandleFunc("/add", rh.AddWorkout)
