@@ -1,11 +1,32 @@
 package dataHandler
 
 import (
+	"encoding/csv"
 	"github.com/Furrj/Workouts/src/internal/types"
 	"os"
 	"strconv"
 	"strings"
 )
+
+func ReadWorkouts(setsCsvUrl string) ([][]string, error) {
+	var records [][]string
+
+	file, err := os.Open(setsCsvUrl)
+	if err != nil {
+		return records, err
+	}
+
+	reader := csv.NewReader(file)
+	records, err = reader.ReadAll()
+	if err != nil {
+		return records, err
+	}
+
+	if err := file.Close(); err != nil {
+		return records, err
+	}
+	return records, nil
+}
 
 func ReadMeta(setsCsvUrl string) (types.MetaData, error) {
 	var meta = types.MetaData{}
