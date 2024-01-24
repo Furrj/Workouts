@@ -33,6 +33,12 @@ func (rh RouteHandler) AddWorkout(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, rh.EnvVars.AddWorkoutHtmlUrl)
 }
 
+func (rh RouteHandler) ViewWorkout(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
+
+	http.ServeFile(w, r, rh.EnvVars.ViewWorkoutHtmlUrl)
+}
+
 func (rh RouteHandler) PostWorkout(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("POST /api/post")
 	var sets []types.ReqSet

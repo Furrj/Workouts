@@ -29,6 +29,7 @@ func main() {
 
 	http.HandleFunc("/", rh.Home)
 	http.HandleFunc("/add", rh.AddWorkout)
+	http.HandleFunc("/list", rh.ViewWorkout)
 	http.HandleFunc("/api/post", rh.PostWorkout)
 
 	log.Panic(http.ListenAndServe(":5000", nil))
