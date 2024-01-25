@@ -13,7 +13,11 @@
     <h1>Workouts</h1>
     {{ range . }}
         <div class="workout_root">
-            <h1>Id: {{ .WorkoutID }}</h1>
+            <h2>Id: {{ .WorkoutID }}</h2>
+            <h2>Date: {{ convertTime .Timestamp }}</h2>
+            {{ range .Sets }}
+                <div>{{ .Name }}</div>
+            {{ end }}
         </div>
     {{ end }}
   </body>

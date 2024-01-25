@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 type RouteHandler struct {
@@ -52,8 +53,18 @@ func (rh RouteHandler) ViewWorkout(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("%+v\n", w)
 	}
 
-	tmpl := template.Must(template.ParseFiles(rh.EnvVars.ViewWorkoutTmplUrl))
-	if err := tmpl.Execute(w, workouts); err != nil {
+	tmpl, err := template.New("list.tmpl").Funcs(template.FuncMap{
+		"convertTime": func(timestamp uint64) string {
+			t := time.Unix(int64(timestamp), 0).UTC()
+			return t.Format("2006-01-02")
+		},
+	}).ParseFiles(rh.EnvVars.ViewWorkoutTmplUrl)
+	if err != nil {
+		fmt.Printf("Error creating template: %+v\n", err)
+		panic(1)
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "list.tmpl", workouts); err != nil {
 		fmt.Printf("Error executing template: %+v\n", err)
 	}
 	//http.ServeFile(w, r, rh.EnvVars.ViewWorkoutHtmlUrl)
