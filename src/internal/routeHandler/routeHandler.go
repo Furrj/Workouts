@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"github.com/Furrj/Workouts/src/internal/dataHandler"
 	"github.com/Furrj/Workouts/src/internal/types"
+	"html/template"
 	"io"
 	"net/http"
+	"os"
+	"time"
 )
 
 type RouteHandler struct {
@@ -31,6 +34,40 @@ func (rh RouteHandler) AddWorkout(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
 
 	http.ServeFile(w, r, rh.EnvVars.AddWorkoutHtmlUrl)
+}
+
+func (rh RouteHandler) ViewWorkout(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
+
+	records, err := dataHandler.ReadWorkouts(rh.EnvVars.SetsCsvUrl)
+	if err != nil {
+		fmt.Printf("Error reading data.csv: %+v\n", err)
+		os.Exit(1)
+	}
+	sets, err := dataHandler.ConvertToSets(records)
+	if err != nil {
+		fmt.Printf("Error converting to sets: %+v\n", err)
+	}
+	workouts := dataHandler.ConvertToResWorkouts(sets)
+	for _, w := range workouts {
+		fmt.Printf("%+v\n", w)
+	}
+
+	tmpl, err := template.New("list.tmpl").Funcs(template.FuncMap{
+		"convertTime": func(timestamp uint64) string {
+			t := time.Unix(int64(timestamp), 0).UTC()
+			return t.Format("2006-01-02")
+		},
+	}).ParseFiles(rh.EnvVars.ViewWorkoutTmplUrl)
+	if err != nil {
+		fmt.Printf("Error creating template: %+v\n", err)
+		panic(1)
+	}
+
+	if err := tmpl.ExecuteTemplate(w, "list.tmpl", workouts); err != nil {
+		fmt.Printf("Error executing template: %+v\n", err)
+	}
+	//http.ServeFile(w, r, rh.EnvVars.ViewWorkoutHtmlUrl)
 }
 
 func (rh RouteHandler) PostWorkout(w http.ResponseWriter, r *http.Request) {

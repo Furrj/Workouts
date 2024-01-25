@@ -13,7 +13,7 @@ func WriteSetsCSV(setsCSVURL string, meta types.MetaData, sets []types.ReqSet) e
 	var workout [][]string
 
 	for _, s := range sets {
-		data := []string{strconv.FormatUint(meta.WorkoutCount, 10), strconv.FormatUint(uint64(s.SetID), 10), strconv.FormatUint(s.Timestamp, 10), s.Name, s.Text, s.Reps, s.Weights}
+		data := []string{strconv.FormatUint(meta.WorkoutCount, 10), strconv.FormatUint(uint64(s.SetID), 10), strconv.FormatUint(s.Timestamp, 10), s.Text, s.Name, s.Reps, s.Weights}
 
 		workout = append(workout, data)
 	}

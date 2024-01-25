@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>View Workouts</title>
+  </head>
+  <body>
+    <h1>Workouts</h1>
+    <div class="workout_root">
+      <h2>2023-12-12</h2>
+      <div class="set_root">
+        <h3>Curls</h3>
+        <section>12x456</section>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  * {
+    box-sizing: border-box;
+    color: white;
+
+    font-size: x-large;
+
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    width: 100vw;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    background: black;
+  }
+
+  .workout_root {
+    width: 80%;
+    height: fit-content;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    background: grey;
+    border-radius: 1rem;
+
+    padding: 0.1rem;
+    margin: 1rem;
+
+    text-align: center;
+  }
+
+  .set_root {
+    width: 50%;
+    height: fit-content;
+
+    background: #bfbfbf;
+  }
+</style>

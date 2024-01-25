@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<meta
+					name="viewport"
+					content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+	/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>View Workouts</title>
+</head>
+<body>
+<h1>Workouts</h1>
+{{ range . }}
+	<div class="workout_root">
+		<h2>{{ convertTime .Timestamp }}</h2>
+      {{ range .Sets }}
+				<div class="set_root">
+            {{ .Text }}
+				</div>
+      {{ end }}
+	</div>
+{{ end }}
+</body>
+</html>
+
+<style>
+    * {
+        box-sizing: border-box;
+        color: white;
+
+        font-size: x-large;
+
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        width: 100vw;
+        min-height: 100vh;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        background: black;
+    }
+
+    .workout_root {
+        width: 80%;
+        height: fit-content;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        background: grey;
+        border-radius: 1rem;
+
+        padding: 0.5rem;
+        margin: 1rem;
+
+        text-align: center;
+    }
+
+    .set_root {
+        width: 50%;
+        height: fit-content;
+
+        background: #bfbfbf;
+
+        margin: 0.5rem;
+    }
+</style>
