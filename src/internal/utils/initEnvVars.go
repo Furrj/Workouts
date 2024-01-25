@@ -12,6 +12,7 @@ func InitEnvVars() types.EnvVars {
 		HomeHtmlUrl:        getVar("HOME_HTML_URL"),
 		AddWorkoutHtmlUrl:  getVar("ADD_WORKOUT_HTML_URL"),
 		ViewWorkoutHtmlUrl: getVar("VIEW_WORKOUT_HTML_URL"),
+		ViewWorkoutTmplUrl: getVar("VIEW_WORKOUT_TMPL_URL"),
 		SetsCsvUrl:         getVar("SETS_CSV_URL"),
 		MetaCsvUrl:         getVar("META_CSV_URL"),
 	}
