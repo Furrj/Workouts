@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/Furrj/Workouts/src/internal/dataHandler"
 	"github.com/Furrj/Workouts/src/internal/types"
+	"html/template"
 	"io"
 	"net/http"
+	"os"
 )
 
 type RouteHandler struct {
@@ -36,7 +38,25 @@ func (rh RouteHandler) AddWorkout(w http.ResponseWriter, r *http.Request) {
 func (rh RouteHandler) ViewWorkout(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s %s\n", r.Method, r.URL.Path)
 
-	http.ServeFile(w, r, rh.EnvVars.ViewWorkoutHtmlUrl)
+	records, err := dataHandler.ReadWorkouts(rh.EnvVars.SetsCsvUrl)
+	if err != nil {
+		fmt.Printf("Error reading data.csv: %+v\n", err)
+		os.Exit(1)
+	}
+	sets, err := dataHandler.ConvertToSets(records)
+	if err != nil {
+		fmt.Printf("Error converting to sets: %+v\n", err)
+	}
+	workouts := dataHandler.ConvertToResWorkouts(sets)
+	for _, w := range workouts {
+		fmt.Printf("%+v\n", w)
+	}
+
+	tmpl := template.Must(template.ParseFiles(rh.EnvVars.ViewWorkoutTmplUrl))
+	if err := tmpl.Execute(w, workouts); err != nil {
+		fmt.Printf("Error executing template: %+v\n", err)
+	}
+	//http.ServeFile(w, r, rh.EnvVars.ViewWorkoutHtmlUrl)
 }
 
 func (rh RouteHandler) PostWorkout(w http.ResponseWriter, r *http.Request) {
