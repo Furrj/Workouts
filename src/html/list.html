@@ -11,6 +11,13 @@
   </head>
   <body>
     <h1>Workouts</h1>
+    <div class="workout_root">
+      <h2>2023-12-12</h2>
+      <div class="set_root">
+        <h3>Curls</h3>
+        <section>12x456</section>
+      </div>
+    </div>
   </body>
 </html>
 
@@ -29,13 +36,13 @@
     width: 100vw;
     min-height: 100vh;
 
-    overflow-x: hidden;
-    overflow-y: auto;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    overflow-x: hidden;
+    overflow-y: auto;
 
     background: black;
   }
@@ -44,15 +51,27 @@
     width: 80%;
     height: fit-content;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
     overflow-x: hidden;
     overflow-y: auto;
 
     background: grey;
     border-radius: 1rem;
 
-    padding: 0.5rem;
+    padding: 0.1rem;
     margin: 1rem;
 
     text-align: center;
+  }
+
+  .set_root {
+    width: 50%;
+    height: fit-content;
+
+    background: #bfbfbf;
   }
 </style>
